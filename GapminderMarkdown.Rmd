@@ -1,11 +1,11 @@
 ---
-title: "Gapminder Example Report"
-author: "Melinda Higgins"
-date: "January 16, 2017"
+title: "Gapminder Homework 1"
+author: "Rachel Wolf"
+date: "January 18, 2017"
 output:
+  word_document: default
   pdf_document: default
   html_document: default
-  word_document: default
 ---
 
 ## **Homework 01 SETUP**
@@ -69,6 +69,14 @@ We can clean this up further by wrapping this command within the `round()` funct
 
 The mean life expectancy is `r round(mean(gapminder$lifeExp), digits=2)` years.
 
+### **Adding sd, median, and sample size**
+
+The standard deviation for life expectancy is `r round(sd(gapminder$lifeExp), digits=2)` years
+
+The median life expectancy is `r round(median(gapminder$lifeExp), digits=2)` years
+
+The sample size for life expectancy is `r length(gapminder$lifeExp)`
+
 ### **Homework 01 Exercise - Task 1**
 
 Modify the sentence above to also provide the standard deviation, median and sample size for life expectancy, set `digits=2`.
@@ -78,9 +86,11 @@ Hint: Read help pages for the functions `sd()`, `median()`, and `length()`.
 ### Look at a statistic by continent
 
 Using the 1st code example at the `gapminder` Github repository at [https://github.com/jennybc/gapminder](https://github.com/jennybc/gapminder), use the `aggregate()` command to see the median life expectancy by continent. You'll notice that the 1st variable listed is the "lifeExp" variable we want run "by" "continent". The "by" is indicated using the _tilde_ symbol `~`. The 2nd variable listed is "continent" - this 2nd variable is usually a "factor-type" variable or group variable. _Hint: Try running lifeExp by year to get median lifeExp for each year._ 
-
+###**Adding sd and standard deviation to life expectancy by continent**
 ```{r}
 aggregate(lifeExp ~ continent, gapminder, median)
+aggregate(lifeExp ~ continent, gapminder, mean)
+aggregate(lifeExp ~ continent, gapminder, sd)
 ```
 
 ### **Homework 01 Exercise - Task 2**
@@ -96,7 +106,18 @@ library(ggplot2)
 ggplot(gapminder, aes(x = continent, y = lifeExp)) +
   geom_boxplot(outlier.colour = "hotpink") +
   geom_jitter(position = position_jitter(width = 0.1, height = 0), alpha = 1/4)
+
+library(ggplot2)
+ggplot(gapminder, aes(x = continent, y = gdpPercap)) +
+  geom_boxplot(outlier.colour = "hotpink") +
+  geom_jitter(position = position_jitter(width = 0.1, height = 0), alpha = 1/4)
+
+library(ggplot2)
+ggplot(gapminder, aes(x = continent, y = pop)) +
+  geom_boxplot(outlier.colour = "hotpink") +
+  geom_jitter(position = position_jitter(width = 0.1, height = 0), alpha = 1/4)
 ```
+###**Added plots for gdpPercap and pop**
 
 ### **Homework 01 Exercise - Task 3**
 
@@ -106,6 +127,7 @@ Modify the R code chunk above to now produce two more plots: one for `gdpPercap`
 
 For this next example, we will use the built-in "country_colors" dataset defined in the `gapminder` package to create an updated data frame (cope of the `gapminder` dataset) called `gap_with_colors`. _NOTE: To see the built-in datasets in the `gapminder` package, type `data(package = "gapminder")` in the console._ After setting up the custom colors, the next line of R code defines which continents we plan to "keep" in our plot. This defines and object called `keepers` below. In this case, we are "keeping" Africa and Europe and the year 2007. So, we are subsetting the dataset for 2 countries and 1 year. Then the `plot()` command creates the scatterplot of life expectancy by GDP per capita with a dot representing each county within 2 continents (Africa and Europe) for only 2007. The size of each dot is represents a 3rd variable "pop" for population size.
 
+###**Adding bubble plots for Americas and Asia**
 ```{r}
 # for convenience, integrate the country colors into the data.frame
 gap_with_colors <-
@@ -116,6 +138,13 @@ gap_with_colors <-
 # bubble plot, focus just on Africa and Europe in 2007
 keepers <- with(gap_with_colors,
                 continent %in% c("Africa", "Europe") & year == 2007)
+plot(lifeExp ~ gdpPercap, gap_with_colors,
+     subset = keepers, log = "x", pch = 21,
+     cex = sqrt(gap_with_colors$pop[keepers]/pi)/1500,
+     bg = gap_with_colors$cc[keepers])
+
+keepers <- with(gap_with_colors,
+                continent %in% c("Americas", "Asia") & year == 1992)
 plot(lifeExp ~ gdpPercap, gap_with_colors,
      subset = keepers, log = "x", pch = 21,
      cex = sqrt(gap_with_colors$pop[keepers]/pi)/1500,
@@ -132,7 +161,8 @@ Modify the code chunk above to make a bubble plot for 2 other continents: Americ
 * If you have MiKTeX or MacTex installed and running on your computer, you can compile the report directly to PDF ("Knit to PDF"). However, if you didn't install these, you should still be able to "Knit to HTML" or "Knit to Word". Once you've got the HTML or Microsoft Word DOCX file created, you can print these to PDF.
 * Make sure your report completes the 4 tasks above with your associated R chunks along with a description or commentary on what you did and the result.
 * Submit the PDF homework using Canvas for N741.
-* Include in your report a link to your Github repository with your RMD file and any other associated output you created. In the body of your Rmarkdown (RMD) report use the `[]()` syntax to embed the URL "web link". For example, the link for this exercise is located at [https://github.com/melindahiggins2000/N741gapminder1](https://github.com/melindahiggins2000/N741gapminder1) which was typed in to the Rmarkdown file as `[https://github.com/melindahiggins2000/N741gapminder1](https://github.com/melindahiggins2000/N741gapminder1)`.
+* Include in your report a link to your Github repository with your RMD file and any other associated output you created. In the body of your Rmarkdown (RMD) report use the `[]()` syntax to embed the URL "web link". For example, the link for this exercise is located at [https://github.com/rawolf16/N741-Homework-1](https://github.com/rawolf16/N741-Homework-1) which was typed in to the Rmarkdown file as `[https://github.com/rawolf16/N741-Homework-1](https://github.com/rawolf16/N741-Homework-1)`. My github account is at [https://github.com/rawolf16] `[https://github.com/rawolf16] (https://github.com/rawolf16)`
+
 
 
 
